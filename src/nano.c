@@ -1603,6 +1603,42 @@ void process_a_keystroke(void)
 	if (input == THE_WINDOW_RESIZED)
 		return;
 #endif
+// auto closing features 
+switch (input) {
+	//begin
+    case '(':
+    case '[':
+    case '{':
+	case '<':
+    case 39:   // Single quote '
+    case 34: { // Double quote "
+        char open = (char)input;
+        char close;
+
+        switch (open) {
+            case '(': close = ')'; break;
+            case '[': close = ']'; break;
+            case '{': close = '}'; break;
+			case '<': close = '>'; break;
+            case 39:  close = '\''; break;
+            case 34:  close = '"'; break;
+        }
+
+        // Insert opening and closing chars
+        char pair[3] = { open, close, '\0' };
+        inject(pair, 2);
+
+        // Move cursor one position left to place it between the pair
+		if(openfile->current_x>0){
+			openfile->current_x-=1;
+		}
+
+
+        return;
+    }
+	// here it ends;
+	//end
+}
 #ifdef ENABLE_MOUSE
 	if (input == KEY_MOUSE) {
 		/* If the user clicked on a shortcut, read in the key code that it was
